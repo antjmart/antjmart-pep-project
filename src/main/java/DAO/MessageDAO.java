@@ -93,4 +93,19 @@ public class MessageDAO {
             System.out.println(e.getMessage());
         }
     }
+
+    // updates message record from Message table with a new message text
+    public void updateMessageWithID(int id, String newText) {
+        Connection conn = ConnectionUtil.getConnection();
+        String sqlLine = "UPDATE message SET message_text = ? WHERE message_id = ?;";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sqlLine);
+            stmt.setString(1, newText);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

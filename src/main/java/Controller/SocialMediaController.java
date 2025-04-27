@@ -34,6 +34,7 @@ public class SocialMediaController {
         app.get("messages", ctx -> ctx.json(messageService.getAllMessages()));
         app.get("messages/{message_id}", this::messageGetter);
         app.delete("messages/{message_id}", this::messageDeletion);
+        app.patch("messages/{message_id}", this::messageUpdate);
         return app;
     }
 
@@ -91,5 +92,20 @@ public class SocialMediaController {
         if (deletedMsg != null)
             ctx.json(deletedMsg);
         ctx.status(200);
+    }
+
+    // handler that covers updating a message with ID provided in pathname
+    private void messageUpdate(Context ctx) {
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        // body contains just one property and value, use string splitting
+        String newText = ctx.body().split("\"")[3];
+        
+        // get back result from attempting to update the message
+        Message updatedMsg = messageService.updateMessageWithID(message_id, newText);
+
+        if (updatedMsg == null)
+            ctx.status(400);  // failure
+        else
+            ctx.json(updatedMsg).status(200);  // success
     }
 }

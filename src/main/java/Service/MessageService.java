@@ -46,4 +46,18 @@ public class MessageService {
         }
         return message;
     }
+
+    // method for checking if message exists, updates message with valid new text
+    public Message updateMessageWithID(int id, String newText) {
+        if (newText.isEmpty() || newText.length() > 255)
+            return null;  // invalid new message
+        
+        Message message = messageDAO.getMessageByID(id);
+        if (message == null)
+            return null;  // the message meant to be updated does not exist
+        
+        messageDAO.updateMessageWithID(id, newText);
+        message.setMessage_text(newText);
+        return message;
+    }
 }
