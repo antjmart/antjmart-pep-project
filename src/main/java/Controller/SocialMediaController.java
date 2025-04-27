@@ -31,6 +31,7 @@ public class SocialMediaController {
         app.post("register", this::userRegistration);
         app.post("login", this::userLogin);
         app.post("messages", this::messageCreation);
+        app.get("messages", ctx -> ctx.json(messageService.getAllMessages()));
         return app;
     }
 

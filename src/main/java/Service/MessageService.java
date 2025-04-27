@@ -3,6 +3,8 @@ package Service;
 import Model.Message;
 import DAO.AccountDAO;
 import DAO.MessageDAO;
+import java.util.List;
+
 
 public class MessageService {
     private MessageDAO messageDAO;
@@ -23,5 +25,10 @@ public class MessageService {
             return null;  // user posting the message does not exist
         
         return messageDAO.insertMessage(message);
+    }
+
+    // method for retrieving all messages from database
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
     }
 }
