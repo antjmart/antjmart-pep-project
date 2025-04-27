@@ -36,4 +36,14 @@ public class MessageService {
     public Message getMessageByID(int id) {
         return messageDAO.getMessageByID(id);
     }
+
+    // method for checking if a message with a given id exists, then deleting it
+    public Message deleteMessageWithID(int id) {
+        Message message = messageDAO.getMessageByID(id);
+        if (message != null) {
+            // if message exists, then delete it
+            messageDAO.deleteMessageWithID(id);
+        }
+        return message;
+    }
 }

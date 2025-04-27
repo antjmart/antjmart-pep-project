@@ -79,4 +79,18 @@ public class MessageDAO {
         // message with the given id was not found
         return null;
     }
+
+    // deletes message record from Message table with the given message_id
+    public void deleteMessageWithID(int id) {
+        Connection conn = ConnectionUtil.getConnection();
+        String sqlLine = "DELETE FROM message WHERE message_id = ?;";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sqlLine);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
