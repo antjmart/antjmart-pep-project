@@ -35,6 +35,15 @@ public class MessageDAO {
         return null;
     }
 
+    // helper method that creates Message object from a retrieved row of data
+    private Message constructMessage(ResultSet record) throws SQLException {
+        int message_id = record.getInt("message_id");
+        int postedBy = record.getInt("posted_by");
+        String msgText = record.getString("message_text");
+        long timePosted = record.getLong("time_posted_epoch");
+        return new Message(message_id, postedBy, msgText, timePosted);
+    }
+
     // queries the full Message table to get all messages
     public List<Message> getAllMessages() {
         Connection conn = ConnectionUtil.getConnection();
@@ -43,18 +52,31 @@ public class MessageDAO {
 
         try {
             ResultSet result = conn.createStatement().executeQuery(query);
-            while (result.next()) {
-                int id = result.getInt("message_id");
-                int poster = result.getInt("posted_by");
-                String msgText = result.getString("message_text");
-                long postTime = result.getLong("time_posted_epoch");
-                // with all needed message info, add it to the messages list
-                messages.add(new Message(id, poster, msgText, postTime));
-            }
+            while (result.next())
+                messages.add(constructMessage(result));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
         return messages;
+    }
+
+    // queries Message table to find record with given message id
+    public Message getMessageByID(int id) {
+        Connection conn = ConnectionUtil.getConnection();
+        String sqlLine = "SELECT * FROM message WHERE message_id = ?;";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sqlLine);
+            stmt.setInt(1, id);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next())
+                return constructMessage(result);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        // message with the given id was not found
+        return null;
     }
 }
