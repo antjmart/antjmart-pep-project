@@ -54,6 +54,7 @@ public class AccountDAO {
         return null;
     }
 
+    // retrives record of an account that has a matching username and password
     public Account findAccountWithCredentials(String username, String password) {
         Connection conn = ConnectionUtil.getConnection();
         String sqlLine = "SELECT * FROM account WHERE username = ? AND password = ?;";
@@ -73,6 +74,29 @@ public class AccountDAO {
             System.out.println(e.getMessage());
         }
         // credentials are invalid, did not match an account
+        return null;
+    }
+
+    // retrieves row record for the account with the given id
+    public Account getAccountByID(int id) {
+        Connection conn = ConnectionUtil.getConnection();
+        String sqlLine = "SELECT * FROM account WHERE account_id = ?;";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sqlLine);
+            stmt.setInt(1, id);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                // this means an account record with the given account id was found
+                String username = result.getString("username");
+                String password = result.getString("password");
+                return new Account(id, username, password);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        // no record with the account id was found
         return null;
     }
 }

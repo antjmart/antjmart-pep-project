@@ -12,11 +12,6 @@ public class AccountService {
         accountDAO = new AccountDAO();
     }
 
-    // create service object from already constructed DAO object
-    public AccountService(AccountDAO accountDAO) {
-        this.accountDAO = accountDAO;
-    }
-
     // method for creating a new account for a user
     public Account createAccount(Account account) {
         String username = account.getUsername();
