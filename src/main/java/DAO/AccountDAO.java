@@ -53,4 +53,26 @@ public class AccountDAO {
         // no record with the username was found
         return null;
     }
+
+    public Account findAccountWithCredentials(String username, String password) {
+        Connection conn = ConnectionUtil.getConnection();
+        String sqlLine = "SELECT * FROM account WHERE username = ? AND password = ?;";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sqlLine);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                // this means a matching account was successfully found
+                int account_id = result.getInt("account_id");
+                return new Account(account_id, username, password);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        // credentials are invalid, did not match an account
+        return null;
+    }
 }

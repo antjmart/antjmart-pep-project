@@ -8,16 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
-/**
- * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
- * found in readme.md as well as the test cases. You should
- * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
- */
 public class SocialMediaController {
-    AccountService accountService;
+    private AccountService accountService;
+    private ObjectMapper omap;
 
     public SocialMediaController() {
         accountService = new AccountService();
+        omap = new ObjectMapper();
     }
 
     /**
@@ -28,12 +25,12 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("register", this::userRegistration);
+        app.post("login", this::userLogin);
         return app;
     }
 
     // handler that covers new user registration
     private void userRegistration(Context ctx) throws JsonProcessingException {
-        ObjectMapper omap = new ObjectMapper();
         Account registrationInfo = omap.readValue(ctx.body(), Account.class);
         // get back result of attempting to register the account
         Account newAccount = accountService.createAccount(registrationInfo);
@@ -44,4 +41,15 @@ public class SocialMediaController {
             ctx.json(newAccount).status(200);  // success
     }
 
+    // handler that covers user logins
+    private void userLogin(Context ctx) throws JsonProcessingException {
+        Account loginInfo = omap.readValue(ctx.body(), Account.class);
+        // get back login result
+        Account loggedIn = accountService.login(loginInfo.getUsername(), loginInfo.getPassword());
+
+        if (loggedIn == null)
+            ctx.status(401);  // failure
+        else
+            ctx.json(loggedIn).status(200);  // success
+    }
 }

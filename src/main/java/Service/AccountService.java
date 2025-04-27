@@ -27,4 +27,9 @@ public class AccountService {
         
         return accountDAO.insertAccount(account);
     }
+
+    // method for attempting a user login into the database
+    public Account login(String username, String password) {
+        return accountDAO.findAccountWithCredentials(username, password);
+    }
 }
