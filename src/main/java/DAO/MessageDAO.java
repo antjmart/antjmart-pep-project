@@ -108,4 +108,24 @@ public class MessageDAO {
             System.out.println(e.getMessage());
         }
     }
+
+    // queries Message table, puts all messages posted by given user into a list
+    public List<Message> getMessagesFromUserID(int account_id) {
+        Connection conn = ConnectionUtil.getConnection();
+        ArrayList<Message> messages = new ArrayList<>();
+        String sqlLine = "SELECT * FROM message WHERE posted_by = ?;";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sqlLine);
+            stmt.setInt(1, account_id);
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next())
+                messages.add(constructMessage(result));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return messages;
+    }
 }

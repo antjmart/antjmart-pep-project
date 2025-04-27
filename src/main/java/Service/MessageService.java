@@ -60,4 +60,9 @@ public class MessageService {
         message.setMessage_text(newText);
         return message;
     }
+
+    // method for getting list of messages posted by given user id
+    public List<Message> getMessagesFromUserID(int account_id) {
+        return messageDAO.getMessagesFromUserID(account_id);
+    }
 }
